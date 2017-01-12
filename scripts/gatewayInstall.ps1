@@ -12,7 +12,7 @@ if (! (Test-Path($logLoc)))
     New-Item -path $logLoc -type directory -Force
 }
 $logPath = "$logLoc\tracelog.log"
-"Start to excute gatewayInstall.ps1. `n" | Out-File $logPath
+(Get-Date -Format "yyyy-MM-dd HH:mm:ss") + "Start to excute gatewayInstall.ps1. `n" | Out-File $logPath
 
 function Now-Value()
 {
@@ -50,7 +50,7 @@ function Trace-Log([string] $msg)
 
 function Run-Process([string] $process, [string] $arguments)
 {
-	Write-Verbose "Run-Process: $process $arguments"
+	Trace-Log "Run-Process: $process $arguments"
 	
 	$errorFile = "$env:tmp\tmp$pid.err"
 	$outFile = "$env:tmp\tmp$pid.out"
@@ -201,6 +201,14 @@ function Register-Gateway([string] $instanceKey)
     Trace-Log "Agent registration is successful!"
 }
 
+function Set-ExternalHostName([string] $keyValue)
+{
+    $regkey = "hklm:\Software\Microsoft\DataTransfer\DataManagementGateway\HostService"
+    Trace-Log "set externalhostname for gateway"
+    Set-ItemProperty -Path $regkey -Name ExternalHostName -Value $keyValue
+    Trace-Log "Successfully add VM DNS name $keyValue in Registry"
+
+}
 Trace-Log "Log file: $logLoc"
 $uri = "https://wu.configuration.dataproxy.clouddatahub.net/GatewayClient/GatewayBits?version={0}&language={1}&platform={2}" -f "latest","en-US","x64"
 Trace-Log "Configuration service url: $uri"
@@ -210,9 +218,5 @@ Trace-Log "Gateway download location: $gwPath"
 
 $hashValue = Download-Gateway $uri $gwPath
 Install-Gateway $gwPath $hashValue
+Set-ExternalHostName $vmdnsname
 Register-Gateway $gatewayKey
-
-$regkey = "hklm:\Software\Microsoft\DataTransfer\DataManagementGateway\HostService"
-Trace-Log "set externalhostname for gateway"
-Set-ItemProperty -Path $regkey -Name ExternalHostName -Value $vmdnsname
-Trace-Log "Successfully add VM DNS name $vmdnsname in Registry"
