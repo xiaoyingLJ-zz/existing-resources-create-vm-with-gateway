@@ -1,0 +1,32 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "Name": {
+      "type": "string"
+    },
+    "virtualNetworkNameResourceGroup":{
+      "type": "string",
+      "metadata": {
+        "description": "if you choose new before, fill in '.' here, otherwise fill in the resource group name that contains your exisating vnet"
+      }
+    },
+    "virtualNetworkName":{
+      "type": "string"
+    },
+    "subnetName":{
+      "type": "string"
+    }
+  },
+  "variables": {
+  },
+  "resources": [
+    
+  ],
+  "outputs": {
+    "subnetRef":{
+      "value": "[resourceId(parameters('virtualNetworkNameResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]",
+      "type": "string"
+    }
+  }
+}
