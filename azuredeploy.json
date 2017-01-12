@@ -260,7 +260,7 @@
             "vmname": "[parameters('Name')]"
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Resources/deployments/', variables('storageTemplateName'))]",
+        "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
         "[resourceId('Microsoft.Resources/deployments/', variables('diagStorageTemplateName'))]",
         "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
@@ -282,22 +282,11 @@
           "osDisk": {
             "name": "osdisk",
             "vhd": {
-              "uri": "[concat('https://', parameters('storageName'), '.blob.core.windows.net/', resourceGroup().name, 'vhds/', parameters('Name'), 'OSDisk.vhd')]"
+              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))).primaryEndpoints.blob, 'vhds/osdisk.vhd')]"
             },
             "caching": "ReadWrite",
             "createOption": "FromImage"
-          },
-          "dataDisks": [
-            {
-              "name": "datadisk1",
-              "diskSizeGB": "100",
-              "lun": 0,
-              "vhd": {
-                "uri": "[concat('https://', parameters('storageName'), '.blob.core.windows.net/', resourceGroup().name, 'vhds/', parameters('Name'), 'DataDisk1.vhd')]"
-              },
-              "createOption": "Empty"
-            }
-          ]
+          }
         },
         "networkProfile": {
           "networkInterfaces": [
@@ -309,7 +298,7 @@
         "diagnosticsProfile": {
           "bootDiagnostics": {
             "enabled": "true",
-            "storageUri": "[concat('https://', parameters('storageName'), '.blob.core.windows.net/')]"
+            "storageUri": "[concat('https://', parameters('diagStorageName'), '.blob.core.windows.net/')]"
           }
         }
       }
