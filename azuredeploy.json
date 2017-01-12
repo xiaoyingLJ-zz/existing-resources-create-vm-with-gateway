@@ -128,7 +128,7 @@
   },
   "variables": {
     "baseUri": "https://raw.githubusercontent.com/xiaoyingLJ/existing-resources-create-vm-with-gateway/master/",
-    "vnetlink": "[concat(variables('baseUri'), parameters('createNewVnetOrUseExisting'),'vnet.json')]",
+    "vnetlink": "[concat(variables('baseUri'), 'nested/', parameters('createNewVnetOrUseExisting'),'vnet.json')]",
     "vnetTemplateName": "[concat(parameters('Name'), 'vnetTemplate')]",
     "nsglink": "[concat(variables('baseUri'), 'nested/', parameters('allowIncomingRemoteFromCredentialManager'),'IncomingRemote.json')]",
     "nsgTemplateName": "[concat(parameters('Name'), 'NSGTemplate')]",
