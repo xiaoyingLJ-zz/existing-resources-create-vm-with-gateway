@@ -93,22 +93,6 @@
         "decription": "your new or existing subnet name"
       }
     },
-    "newOrExistingStorageForVM":
-    {
-      "type": "string",
-      "defaultValue": "new",
-      "allowedValues": [
-        "new","existing"
-      ]
-    },
-    "storageName":{
-      "type": "string",
-      "maxLength": 24,
-      "minLength": 3,
-      "metadata": {
-        "description": "if you choose existing, input your existing storage name. if you choose new, we will create a unique storage name with the prefix you input here."
-      }
-    },
     "newOrExistingDiagStorageForVM":
     {
       "type": "string",
