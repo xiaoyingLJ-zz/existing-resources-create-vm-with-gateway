@@ -178,7 +178,7 @@
             "vmname": "[parameters('Name')]"
       },
       "sku": {
-        "name": "Standard_LRS"
+        "name": "Premium_LRS"
       },
       "kind": "Storage",
       "properties": {}
