@@ -132,8 +132,8 @@
     "vnetTemplateName": "[concat(parameters('Name'), 'vnetTemplate')]",
     "nsglink": "[concat(variables('baseUri'), 'nested/', parameters('allowIncomingRemoteFromCredentialManager'),'IncomingRemote.json')]",
     "nsgTemplateName": "[concat(parameters('Name'), 'NSGTemplate')]",
-    "storagelink": "[concat(variables('baseUri'), 'nested/', parameters('newOrExistingStorageForVM'),'Storage.json')]",
-    "storageTemplateName": "[concat(parameters('Name'), 'StorageTemplate')]",
+    "prefix": "[split(parameters('Name'), '-')[0]]",
+    "storageAccountName": "[take(concat(toLower(variables('prefix')), uniquestring(resourceGroup().id)), 24)]",
     "diagStoragelink": "[concat(variables('baseUri'), 'nested/', parameters('newOrExistingDiagStorageForVM'),'DiagStorage.json')]",
     "diagStorageTemplateName": "[concat(parameters('Name'), 'DiagStorageTemplate')]",
     "nicName": "[concat(parameters('Name'), 'Nic')]",
@@ -186,24 +186,18 @@
       }
     },
     {
-      "apiVersion": "2015-01-01",
-      "name": "[variables('storageTemplateName')]",
-      "type": "Microsoft.Resources/deployments",
-      "properties": {
-        "mode": "incremental",
-        "templateLink": {
-          "uri": "[variables('storagelink')]",
-          "contentVersion": "1.0.0.0"
-        },
-        "parameters": {
-          "Name": {
-            "value": "[parameters('Name')]"
-          },
-          "storageName": {
-            "value": "[parameters('storageName')]"
-          }
-        }
-      }
+      "type": "Microsoft.Storage/storageAccounts",
+      "name": "[variables('storageAccountName')]",
+      "apiVersion": "2016-01-01",
+      "location": "[resourceGroup().location]",
+      "tags": {
+            "vmname": "[parameters('Name')]"
+      },
+      "sku": {
+        "name": "Standard_LRS"
+      },
+      "kind": "Storage",
+      "properties": {}
     },
     {
       "apiVersion": "2015-01-01",
